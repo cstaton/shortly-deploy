@@ -7,11 +7,13 @@ module.exports = function(grunt) {
         separator: '',
       },
       dist: {
-        src: ['public/lib/jquery.js',
-              'public/lib/underscore.js',
-              'public/lib/backbone.js',
-              'public/lib/handlebars.js',
-              'public/client/*.js',],
+        src: ['public/client/app.js',
+              'public/client/link.js',
+              'public/client/links.js',
+              'public/client/linkView.js',
+              'public/client/linksView.js',
+              'public/client/createLinkView.js',
+              'public/client/router.js'],
         dest: 'public/dist/built.js',
       },
     },
@@ -40,15 +42,18 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      files: [
-        // Add filespec list here
-      ],
+      files: ['public/client/app.js',
+              'public/client/link.js',
+              'public/client/links.js',
+              'public/client/linkView.js',
+              'public/client/linksView.js',
+              'public/client/createLinkView.js',
+              'public/client/router.js'],
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
         ignores: [
           'public/lib/**/*.js',
-          'public/dist/**/*.js'
         ]
       }
     },
@@ -74,8 +79,15 @@ module.exports = function(grunt) {
     },
 
     shell: {
-      prodServer: {
+      // prodServer:  {},
+      path: {
+        command: [
+          "git push azure master"
+          ].join('&&')
       }
+      // ls: {
+      //   command: "ls"
+      // }
     },
   });
 
@@ -106,10 +118,13 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
-    'mochaTest'
+    'mochaTest',
+    'jshint'
   ]);
 
   grunt.registerTask('build', [
+    'concat',
+    'uglify'
   ]);
 
   grunt.registerTask('upload', function(n) {
@@ -121,8 +136,13 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('deploy', [
+    "shell"
     // add your deploy tasks here
   ]);
 
-  grunt.registerTask('default', ['concat','uglify']);
+  grunt.registerTask('default', [
+    'test',
+    'build',
+    'deploy'
+    ]);
 };
