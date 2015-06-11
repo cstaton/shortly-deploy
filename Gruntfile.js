@@ -3,6 +3,17 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: {
+        separator: '',
+      },
+      dist: {
+        src: ['public/lib/jquery.js',
+              'public/lib/underscore.js',
+              'public/lib/backbone.js',
+              'public/lib/handlebars.js',
+              'public/client/*.js',],
+        dest: 'public/dist/built.js',
+      },
     },
 
     mochaTest: {
@@ -21,6 +32,11 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      my_target: {
+        files: {
+          'public/dist/built2.js': ['public/dist/built.js']
+        }
+      }
     },
 
     jshint: {
@@ -108,5 +124,5 @@ module.exports = function(grunt) {
     // add your deploy tasks here
   ]);
 
-
+  grunt.registerTask('default', ['concat','uglify']);
 };
